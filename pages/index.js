@@ -1,10 +1,12 @@
-// Ritu's Mirror - Self-hosted Chat App using GPT-3.5 Turbo (Vercel-secure version)
+// self-heal - Self-hosted Chat App using GPT-3.5 Turbo (Vercel-secure version)
 
 import { useState } from 'react';
 import axios from 'axios';
 
-export default function RitusMirror() {
-  const [messages, setMessages] = useState([]);
+export default function SelfHeal() {
+  const [messages, setMessages] = useState([
+    { role: 'assistant', content: 'Welcome. This space is here for you.' }
+  ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +21,7 @@ export default function RitusMirror() {
     try {
       const response = await axios.post('/api/chat', {
         messages: [
-          { role: 'system', content: 'You are a calm, emotionally intelligent guide for Ritu. Speak with warmth, help her reflect, and offer insights with empathy. Never be cold or clinical. Keep responses gentle and thoughtful.' },
+          { role: 'system', content: 'You are a calm, emotionally intelligent guide. Speak with warmth, help the user reflect, and offer insights with empathy. Never be cold or clinical. Keep responses gentle and thoughtful.' },
           ...newMessages
         ]
       });
@@ -35,27 +37,29 @@ export default function RitusMirror() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-2xl font-bold mb-4 text-center">Ritu's Mirror</h1>
-      <div className="max-w-xl mx-auto bg-white p-4 rounded shadow">
-        <div className="space-y-2 h-96 overflow-y-scroll border p-3 mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+      <h1 className="text-3xl font-bold mb-4 text-center text-indigo-800">Welcome to Self-Heal</h1>
+      <p className="text-center text-gray-600 mb-6">What's on your mind today?</p>
+      <div className="max-w-xl mx-auto bg-white p-4 rounded-2xl shadow-lg">
+        <div className="space-y-2 h-96 overflow-y-scroll border p-3 mb-4 rounded-md bg-gray-50">
           {messages.map((msg, idx) => (
             <div key={idx} className={msg.role === 'user' ? 'text-right' : 'text-left'}>
-              <div className={msg.role === 'user' ? 'bg-blue-100 inline-block px-3 py-2 rounded' : 'bg-green-100 inline-block px-3 py-2 rounded'}>
+              <div className={msg.role === 'user' ? 'bg-blue-100 inline-block px-3 py-2 rounded-lg' : 'bg-green-100 inline-block px-3 py-2 rounded-lg'}>
                 {msg.content}
               </div>
             </div>
           ))}
         </div>
-        <div className="flex gap-2">
-          <input
+        <div className="flex flex-col gap-2">
+          <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            className="flex-1 p-2 border rounded"
-            placeholder="What's on your mind, Ritu?"
+            onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
+            rows={3}
+            className="flex-1 p-2 border rounded resize-none"
+            placeholder="Type your thoughts here..."
           />
-          <button onClick={handleSend} disabled={loading} className="bg-blue-500 text-white px-4 py-2 rounded">
+          <button onClick={handleSend} disabled={loading} className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
             {loading ? '...' : 'Send'}
           </button>
         </div>
